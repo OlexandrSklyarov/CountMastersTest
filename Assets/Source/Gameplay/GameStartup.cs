@@ -1,5 +1,6 @@
 using UnityEngine;
 using Source.Gameplay.Environment;
+using Cinemachine;
 
 namespace Source.Gameplay
 {
@@ -7,6 +8,7 @@ namespace Source.Gameplay
     {        
         [SerializeField] private RoadController _roadController;
         [SerializeField] private Transform _playerSpawnPoint;
+        [SerializeField] private CinemachineVirtualCamera _camera;
 
         private GameProcess _gameProcess;
         private bool _isRun;
@@ -16,7 +18,7 @@ namespace Source.Gameplay
         {
             _roadController.Init();
 
-            _gameProcess = new GameProcess(_roadController, _playerSpawnPoint);
+            _gameProcess = new GameProcess(_roadController, _playerSpawnPoint, _camera);
             _gameProcess.CompletedEvent += OnCompleted;
             _gameProcess.FailureEvent += OnFailure;
 

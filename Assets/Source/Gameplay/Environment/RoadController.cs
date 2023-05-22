@@ -4,8 +4,6 @@ namespace Source.Gameplay.Environment
 {
     public class RoadController : MonoBehaviour, IRoad
     {
-        [SerializeField] private Transform _road;
-
         private Transform _tr;
 
         public void Init()
@@ -16,7 +14,7 @@ namespace Source.Gameplay.Environment
 
         void IRoad.Move(float speed)
         {
-            _road.Translate(-_tr.forward * speed * Time.deltaTime);
+            _tr.Translate(-_tr.forward * speed * Time.deltaTime);
         }
     }
 }

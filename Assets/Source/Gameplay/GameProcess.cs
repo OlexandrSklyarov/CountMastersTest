@@ -1,4 +1,5 @@
 using System;
+using Cinemachine;
 using Source.Data;
 using Source.Gameplay.Characters;
 using Source.Gameplay.Environment;
@@ -18,19 +19,21 @@ namespace Source.Gameplay
         public event Action FailureEvent;           
 
 
-        public GameProcess(IRoad road, Transform _playerSpawnPoint)
+        public GameProcess(IRoad road, Transform _playerSpawnPoint, CinemachineVirtualCamera camera)
         {
             _config = ProjectContext.Instance.MainConfig;
             _road = road;
 
             var stickmanController = GetStickmanController(_playerSpawnPoint);
-            _playerController = new PlayerController
-            (
-                _config.Player,
-                _road,
-                stickmanController,
-                new StickmanFactory(_config.StickmanCollection)
-            );
+            _playerController = new PlayerController(_config.PlayerConfig, _road, stickmanController);
+
+            SetupCamera(camera, stickmanController.transform);
+        }
+
+
+        private void SetupCamera(CinemachineVirtualCamera camera, Transform target)
+        {
+            camera.Follow = target;
         }
 
 
@@ -38,6 +41,9 @@ namespace Source.Gameplay
         {
             var controller = UnityEngine.Object.Instantiate(
                 _config.StickmanControllerPrefab, spawnPoint.position, spawnPoint.rotation);
+
+            var factory = new StickmanFactory(_config.StickmanCollection);
+            controller.Init(_config.StickmenControllerConfig, factory);
                 
             return controller;
         }
