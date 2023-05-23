@@ -13,7 +13,7 @@ Material:
   - _EMISSION
   m_InvalidKeywords: []
   m_LightmapFlags: 2
-  m_EnableInstancingVariants: 0
+  m_EnableInstancingVariants: 1
   m_DoubleSidedGI: 0
   m_CustomRenderQueue: -1
   stringTagMap:
@@ -100,7 +100,7 @@ Material:
     - _Parallax: 0.02
     - _QueueOffset: 0
     - _ReceiveShadows: 1
-    - _Smoothness: 0.5
+    - _Smoothness: 0
     - _SmoothnessTextureChannel: 0
     - _SpecularHighlights: 1
     - _SrcBlend: 1
@@ -109,9 +109,9 @@ Material:
     - _WorkflowMode: 1
     - _ZWrite: 1
     m_Colors:
-    - _BaseColor: {r: 0.025231387, g: 0.3097855, b: 0.5943396, a: 1}
-    - _Color: {r: 0.025231387, g: 0.30978543, b: 0.5943396, a: 1}
-    - _EmissionColor: {r: 0.013349943, g: 0.050236482, b: 0.18867922, a: 1}
+    - _BaseColor: {r: 0.04605731, g: 0.34850034, b: 0.6509434, a: 1}
+    - _Color: {r: 0.04605729, g: 0.3485003, b: 0.6509434, a: 1}
+    - _EmissionColor: {r: 0, g: 0.08595393, b: 0.38679248, a: 1}
     - _SpecColor: {r: 0.19999996, g: 0.19999996, b: 0.19999996, a: 1}
   m_BuildTextureStacks: []
 --- !u!114 &8699320396888539283

@@ -9,7 +9,7 @@ namespace Source.Gameplay.Characters
         [SerializeField] TextMeshPro _counter;
 
 
-        public void Init(IStickmanChange source)
+        public void Init(IStickmanInfo source)
         {
             source.ChangeStickmanCountEvent += OnChangeHandler;
         }

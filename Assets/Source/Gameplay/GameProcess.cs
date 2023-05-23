@@ -1,8 +1,8 @@
 using System;
 using Cinemachine;
+using Common.Input;
 using Source.Data;
 using Source.Gameplay.Characters;
-using Source.Gameplay.Environment;
 using Source.Gameplay.Player;
 using Source.Services;
 using UnityEngine;
@@ -12,24 +12,28 @@ namespace Source.Gameplay
     public class GameProcess
     {
         private readonly MainConfig _config;
-        private readonly IRoad _road;
+        private readonly TouchInputManager _input;
         private readonly PlayerController _playerController;
 
         public event Action CompletedEvent;            
         public event Action FailureEvent;           
 
 
-        public GameProcess(IRoad road, Transform _playerSpawnPoint, CinemachineVirtualCamera camera)
+        public GameProcess(Transform _playerSpawnPoint, CinemachineVirtualCamera camera)
         {
             _config = ProjectContext.Instance.MainConfig;
-            _road = road;
+
+            _input = new TouchInputManager();
 
             var stickmanController = GetStickmanController(_playerSpawnPoint);
-            _playerController = new PlayerController(_config.PlayerConfig, _road, stickmanController);
+            
+            _playerController = new PlayerController(_config.PlayerConfig, stickmanController, _input);
+            _playerController.SuccessEvent += OnCompleted;
+            _playerController.FailureEvent += OnFailure;
 
             SetupCamera(camera, stickmanController.transform);
         }
-
+        
 
         private void SetupCamera(CinemachineVirtualCamera camera, Transform target)
         {
@@ -51,19 +55,43 @@ namespace Source.Gameplay
 
         public void OnUpdate()
         {
-            
+            _input?.OnUpdate();
+            _playerController?.OnUpdate();
         }
 
 
         public void Play()
         {
-            
+            _input?.OnEnable();
+            _playerController?.Enable();
         }
 
 
         public void Stop()
         {
-            
+            _input?.OnDisable();
+            _playerController?.Disable();
+        }
+
+
+        private void OnFailure()
+        {
+            UnScribePlayerController();
+            FailureEvent?.Invoke();
+        }
+        
+
+        private void OnCompleted()
+        {
+            UnScribePlayerController();
+            CompletedEvent?.Invoke();
+        }
+
+
+        private void UnScribePlayerController()
+        {
+            _playerController.SuccessEvent -= OnCompleted;
+            _playerController.FailureEvent -= OnFailure;
         }
     }
 }

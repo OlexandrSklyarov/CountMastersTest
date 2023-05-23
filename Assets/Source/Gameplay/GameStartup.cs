@@ -6,7 +6,6 @@ namespace Source.Gameplay
 {
     public class GameStartup : MonoBehaviour
     {        
-        [SerializeField] private RoadController _roadController;
         [SerializeField] private Transform _playerSpawnPoint;
         [SerializeField] private CinemachineVirtualCamera _camera;
 
@@ -16,9 +15,7 @@ namespace Source.Gameplay
 
         private void Start()
         {
-            _roadController.Init();
-
-            _gameProcess = new GameProcess(_roadController, _playerSpawnPoint, _camera);
+            _gameProcess = new GameProcess(_playerSpawnPoint, _camera);
             _gameProcess.CompletedEvent += OnCompleted;
             _gameProcess.FailureEvent += OnFailure;
 
