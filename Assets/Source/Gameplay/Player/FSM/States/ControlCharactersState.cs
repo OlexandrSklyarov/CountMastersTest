@@ -33,7 +33,6 @@ namespace Source.Gameplay.Player.FSM.States
 
         private void OnInputHandler(TouchInputManager.InputData data)
         {            
-            Debug.Log($"data.Phase {data.Phase}");
             switch(data.Phase)
             {
                 case Phase.Began:

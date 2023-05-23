@@ -32,6 +32,7 @@ namespace Source.Gameplay.Environment
                 case GateType.ADDER:
 
                     rndNum = UnityEngine.Random.Range(10, 100);
+                    RoundNumber();
                     _view.text = $"+{rndNum}";
 
                     break;
@@ -39,11 +40,17 @@ namespace Source.Gameplay.Environment
                 case GateType.MULTIPLIER:
 
                     rndNum = UnityEngine.Random.Range(1, 3);
-                    if (rndNum % 2 != 0) rndNum += 1;
+                    RoundNumber();
                     _view.text = $"X{rndNum}";
 
                     break;
             }
+        }
+
+
+        private void RoundNumber()
+        {
+            if (rndNum % 2 != 0) rndNum += 1;
         }
         
 

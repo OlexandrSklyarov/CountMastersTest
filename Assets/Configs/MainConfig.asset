@@ -14,12 +14,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   <PlayerConfig>k__BackingField:
     <Movement>k__BackingField:
-      <VerticalSpeed>k__BackingField: 7
+      <VerticalSpeed>k__BackingField: 5
       <HorizontalSpeed>k__BackingField: 1.5
   <StickmenControllerConfig>k__BackingField:
-    <StartStickmanCount>k__BackingField: 3
+    <StartStickmanCount>k__BackingField: 1
+    <MinCount>k__BackingField: 3
+    <MaxCount>k__BackingField: 250
     <HorizontalMovementLimit>k__BackingField: 8
-    <UnitDistanceFactor>k__BackingField: 0.5
+    <UnitDistanceFactor>k__BackingField: 0.35
     <UnitRadius>k__BackingField: 1
   <StickmanControllerPrefab>k__BackingField: {fileID: 1303109660185840059, guid: 31b8ef9e346dd818fb90c74b0765e5a5,
     type: 3}
