@@ -30,7 +30,8 @@ namespace Source.Gameplay
         private void OnCompleted()
         {
             _gameProcess.Stop();  
-            SetRunStatus(false);          
+            SetRunStatus(false);   
+            Debug.Log("Completed");       
         }
 
 
@@ -38,6 +39,7 @@ namespace Source.Gameplay
         {
             _gameProcess.Stop();  
             SetRunStatus(false); 
+            Debug.Log("Failure..."); 
         }
 
 

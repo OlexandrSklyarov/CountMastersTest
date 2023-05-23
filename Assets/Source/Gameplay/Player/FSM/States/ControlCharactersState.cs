@@ -20,16 +20,16 @@ namespace Source.Gameplay.Player.FSM.States
         public override void OnStart()
         {
             _agent.Input.InputTouchEvent += OnInputHandler;
-
-            
+            _agent.StickmanController.FailureEvent += OnFailureHandler;            
         }
         
 
         public override void OnStop()
         {
             _agent.Input.InputTouchEvent -= OnInputHandler;
+            _agent.StickmanController.FailureEvent -= OnFailureHandler;  
         }
-
+        
 
         private void OnInputHandler(TouchInputManager.InputData data)
         {            
@@ -102,6 +102,12 @@ namespace Source.Gameplay.Player.FSM.States
             }
 
             return false;
-        }        
+        }   
+
+
+        private void OnFailureHandler()
+        {
+            _context.SwitchState<LevelFailureState>();
+        }     
     }
 }

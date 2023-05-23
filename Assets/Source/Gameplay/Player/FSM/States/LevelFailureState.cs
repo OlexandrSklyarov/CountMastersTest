@@ -16,7 +16,6 @@ namespace Source.Gameplay.Player.FSM.States
 
         public override void OnStop()
         {
-            throw new System.NotImplementedException();
         }
     }
 }

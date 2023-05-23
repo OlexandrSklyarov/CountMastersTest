@@ -24,6 +24,7 @@ namespace Source.Gameplay.Characters
         private List<Stickman> _characters = new();
 
         public event Action<int, int> ChangeStickmanCountEvent;
+        public event Action FailureEvent;
 
 
         public void Init(StickmanControllerData config, StickmanFactory factory)
@@ -46,6 +47,7 @@ namespace Source.Gameplay.Characters
                 var stickman = _factory.Get(StickmanType.SIMPLE_STICKMAN);
                 stickman.transform.SetPositionAndRotation(_container.position, _container.rotation);
                 stickman.transform.SetParent(_container);
+                stickman.DieEvent += OnStickmanDie;
                 _characters.Add(stickman);
             }
 
@@ -55,7 +57,19 @@ namespace Source.Gameplay.Characters
         }
 
 
-        private void Formation()
+        private void OnStickmanDie(Stickman stickman)
+        {
+            stickman.DieEvent -= OnStickmanDie;
+            _characters.Remove(stickman);
+
+            if (StickmanCount > 0) return;
+
+            FailureEvent?.Invoke();
+            _counter.Hide();
+        }
+
+
+        private void Formation(float duration = 1f)
         {
             for (int i = 1; i < StickmanCount; i++)
             {
@@ -67,7 +81,7 @@ namespace Source.Gameplay.Characters
                 );
 
                 _container.GetChild(i).transform
-                    .DOLocalMove(newPos, 1f)
+                    .DOLocalMove(newPos, duration)
                     .SetEase(Ease.OutBack);
             }
         }

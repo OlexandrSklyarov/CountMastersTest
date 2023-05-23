@@ -14,8 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   <PlayerConfig>k__BackingField:
     <Movement>k__BackingField:
-      <VerticalSpeed>k__BackingField: 7
-      <HorizontalSpeed>k__BackingField: 1.5
+      <VerticalSpeed>k__BackingField: 12
+      <HorizontalSpeed>k__BackingField: 5
   <StickmenControllerConfig>k__BackingField:
     <StartStickmanCount>k__BackingField: 1
     <MinCount>k__BackingField: 3

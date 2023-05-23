@@ -1,3 +1,4 @@
+using System;
 using DG.Tweening;
 using TMPro;
 using UnityEngine;
@@ -12,6 +13,12 @@ namespace Source.Gameplay.Characters
         public void Init(IStickmanInfo source)
         {
             source.ChangeStickmanCountEvent += OnChangeHandler;
+        }
+
+
+        public void Hide()
+        {
+            transform.GetChild(0).gameObject.SetActive(false);
         }
 
 
