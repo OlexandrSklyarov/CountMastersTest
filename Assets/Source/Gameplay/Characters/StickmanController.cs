@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using DG.Tweening;
 using Source.Data;
 using Source.Gameplay.Environment;
+using Source.Gameplay.Extensions;
 using Source.Services;
 using UnityEngine;
 
@@ -72,13 +73,8 @@ namespace Source.Gameplay.Characters
         private void Formation(float duration = 1f)
         {
             for (int i = 1; i < StickmanCount; i++)
-            {
-                var newPos = new Vector3
-                (
-                    _config.UnitDistanceFactor * Mathf.Sqrt(i) * Mathf.Cos(i * _config.UnitRadius),
-                    0f,
-                    _config.UnitDistanceFactor * Mathf.Sqrt(i) * Mathf.Sin(i * _config.UnitRadius)
-                );
+            {    
+                var newPos = UnitExtensions.GetPositionInSpiralFormation(_config.UnitDistanceFactor, _config.UnitRadius, i);
 
                 _container.GetChild(i).transform
                     .DOLocalMove(newPos, duration)

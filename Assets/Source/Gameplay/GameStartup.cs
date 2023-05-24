@@ -1,16 +1,17 @@
 using UnityEngine;
-using Source.Gameplay.Environment;
 using Cinemachine;
 
 namespace Source.Gameplay
 {
     public class GameStartup : MonoBehaviour
     {        
+        private enum GameState {WAIT, RUN}
+
         [SerializeField] private Transform _playerSpawnPoint;
         [SerializeField] private CinemachineVirtualCamera _camera;
 
         private GameProcess _gameProcess;
-        private bool _isRun;
+        private GameState _state;
 
 
         private void Start()
@@ -20,17 +21,18 @@ namespace Source.Gameplay
             _gameProcess.FailureEvent += OnFailure;
 
             _gameProcess.Play();
-            SetRunStatus(true);
+
+            SetRunStatus(GameState.RUN);
         }
 
 
-        private void SetRunStatus(bool status) => _isRun = status;
+        private void SetRunStatus(GameState s) => _state = s;
 
 
         private void OnCompleted()
         {
             _gameProcess.Stop();  
-            SetRunStatus(false);   
+            SetRunStatus(GameState.WAIT);   
             Debug.Log("Completed");       
         }
 
@@ -38,14 +40,14 @@ namespace Source.Gameplay
         private void OnFailure()
         {
             _gameProcess.Stop();  
-            SetRunStatus(false); 
+            SetRunStatus(GameState.WAIT); 
             Debug.Log("Failure..."); 
         }
 
 
         private void Update()
         {
-            if (!_isRun) return;
+            if (_state == GameState.WAIT) return;
 
             _gameProcess?.OnUpdate();
         }
