@@ -1,7 +1,9 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using DG.Tweening;
 using Source.Data;
+using Source.Gameplay.Characters.Enemy;
 using Source.Gameplay.Environment;
 using Source.Gameplay.Extensions;
 using Source.Services;
@@ -11,11 +13,12 @@ namespace Source.Gameplay.Characters
 {
     [RequireComponent(typeof(SphereCollider), typeof(Rigidbody))]
     public class StickmanController : MonoBehaviour, 
-        IStickmanController, IStickmanInfo, IInteractTarget
+        IStickmanController, IStickmanInfo, IInteractTarget, IAttackGroup
     {
         Transform IStickmanController.Transform => _tr;
         private int StickmanCount => _characters.Count;
-
+        bool IAttackGroup.IsAlive => StickmanCount > 0;
+        Vector3 IAttackGroup.Center => _tr.position;
 
         [SerializeField] private Transform _container;
         [SerializeField] private StickmenViewInfo _counter;
@@ -85,10 +88,19 @@ namespace Source.Gameplay.Characters
 
         private void OnTriggerEnter(Collider other) 
         {
-            if (other.TryGetComponent(out IInteractable item))   
-            {
-                item.Interact(this);
+            if (other.TryGetComponent(out IInteractable item)) { item.Interact(this); } 
+
+            if (other.TryGetComponent(out IEnemyGroup enemyGroup)) 
+            { 
+                enemyGroup.DestroyEvent += OnDestroyEnemyGroup;
+                
             } 
+        }
+
+
+        private void OnDestroyEnemyGroup(IEnemyGroup group)
+        {
+            group.DestroyEvent -= OnDestroyEnemyGroup;
         }
 
 

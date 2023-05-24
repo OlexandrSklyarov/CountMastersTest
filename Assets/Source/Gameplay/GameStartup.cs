@@ -1,5 +1,6 @@
 using UnityEngine;
 using Cinemachine;
+using Source.Gameplay.Characters.Enemy;
 
 namespace Source.Gameplay
 {
@@ -9,6 +10,7 @@ namespace Source.Gameplay
 
         [SerializeField] private Transform _playerSpawnPoint;
         [SerializeField] private CinemachineVirtualCamera _camera;
+        [SerializeField] private EnemyContainer _enemyContainer;
 
         private GameProcess _gameProcess;
         private GameState _state;
@@ -16,7 +18,7 @@ namespace Source.Gameplay
 
         private void Start()
         {
-            _gameProcess = new GameProcess(_playerSpawnPoint, _camera);
+            _gameProcess = new GameProcess(_playerSpawnPoint, _enemyContainer, _camera);
             _gameProcess.CompletedEvent += OnCompleted;
             _gameProcess.FailureEvent += OnFailure;
 

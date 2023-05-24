@@ -19,13 +19,17 @@ namespace Source.Gameplay
         public event Action FailureEvent;           
 
 
-        public GameProcess(Transform _playerSpawnPoint, CinemachineVirtualCamera camera)
+        public GameProcess(Transform _playerSpawnPoint, Characters.Enemy.EnemyContainer _enemyContainer, CinemachineVirtualCamera camera)
         {
             _config = ProjectContext.Instance.MainConfig;
 
             _input = new TouchInputManager();
 
-            var stickmanController = GetStickmanController(_playerSpawnPoint);
+            var stickmanFactory = new StickmanFactory(_config.StickmanCollection);
+
+            _enemyContainer.Init(_config.EnemyConfig, stickmanFactory);
+
+            var stickmanController = GetStickmanController(_playerSpawnPoint, stickmanFactory);
             
             _playerController = new PlayerController(_config.PlayerConfig, stickmanController, _input);
             _playerController.SuccessEvent += OnCompleted;
@@ -41,12 +45,11 @@ namespace Source.Gameplay
         }
 
 
-        private StickmanController GetStickmanController(Transform spawnPoint)
+        private StickmanController GetStickmanController(Transform spawnPoint, StickmanFactory factory)
         {
             var controller = UnityEngine.Object.Instantiate(
                 _config.StickmanControllerPrefab, spawnPoint.position, spawnPoint.rotation);
-
-            var factory = new StickmanFactory(_config.StickmanCollection);
+            
             controller.Init(_config.StickmenControllerConfig, factory);
                 
             return controller;
