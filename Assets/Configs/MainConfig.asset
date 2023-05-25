@@ -25,19 +25,22 @@ MonoBehaviour:
     <HorizontalMovementLimit>k__BackingField: 8
     <AttackMoveSpeed>k__BackingField: 1.5
     <Unit>k__BackingField:
-      <DistanceFactor>k__BackingField: 0.4
+      <DistanceFactor>k__BackingField: 0.35
       <Radius>k__BackingField: 0.4
-      <AttackSpeed>k__BackingField: 0.3
-      <AttackRotateSpeed>k__BackingField: 0.1
+      <AttackSpeed>k__BackingField: 0.8
+      <AttackRotateSpeed>k__BackingField: 20
+      <ReturnToOriginDuration>k__BackingField: 3
+    <Formation>k__BackingField: {fileID: 11400000, guid: 6bd14cb9780e95e05a130151a6a56c96,
+      type: 2}
   <EnemyConfig>k__BackingField:
     <StickmanType>k__BackingField: 1
     <SpawnCount>k__BackingField:
       _min: 20
-      _max: 30
-    <UnitsSpeed>k__BackingField: 3
-    <UnitsRotationSpeed>k__BackingField: 0.1
-    <UnitDistanceFactor>k__BackingField: 0.4
-    <UnitRadius>k__BackingField: 0.4
+      _max: 50
+    <UnitsSpeed>k__BackingField: 2.5
+    <UnitsRotationSpeed>k__BackingField: 20
+    <Formation>k__BackingField: {fileID: 11400000, guid: d65db37a7f4b51ac8afdac71b31fcf07,
+      type: 2}
   <StickmanCollection>k__BackingField:
   - <Type>k__BackingField: 0
     <Prefab>k__BackingField: {fileID: 8665782160532471987, guid: 748b6084bd9c76b9a936458fab419147,

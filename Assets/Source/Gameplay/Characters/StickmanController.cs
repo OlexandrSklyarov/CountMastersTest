@@ -79,13 +79,16 @@ namespace Source.Gameplay.Characters
         private void Formation(float duration = 1f, bool includeFirstUnit = false)
         {
             var start = (includeFirstUnit) ? 0 : 1;
-
+            
             for (int i = start; i < StickmanCount; i++)
             {    
-                var newPos = UnitExtensions.GetPositionInSpiralFormation(
-                    _config.Unit.DistanceFactor, _config.Unit.Radius, i); 
+                var newPos = UnitExtensions.Formation
+                    .GetPositionInSpiralFormation(_config.Formation.UnitDistanceFactor, _config.Formation.UnitRadius, i);
 
-                _container.GetChild(i).transform
+                var unitTR = _container.GetChild(i).transform;
+                unitTR.rotation = Quaternion.Euler(_container.transform.forward);
+                
+                unitTR
                     .DOLocalMove(newPos, duration)
                     .SetEase(Ease.OutBack);
             }
@@ -169,7 +172,7 @@ namespace Source.Gameplay.Characters
         {
             group.KillAllUnitsEvent -= OnAttackCompleted;
             SetState(State.NORMAL);
-            Formation(includeFirstUnit: true);
+            Formation(_config.Unit.ReturnToOriginDuration, true);
         }
 
 

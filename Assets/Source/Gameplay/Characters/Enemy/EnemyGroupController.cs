@@ -77,9 +77,13 @@ namespace Source.Gameplay.Characters.Enemy
         {
             for (int i = 1; i < StickmanCount; i++)
             {    
-                var newPos = UnitExtensions.GetPositionInSpiralFormation(_config.UnitDistanceFactor, _config.UnitRadius, i);
+                var newPos = UnitExtensions.Formation
+                    .GetPositionInSpiralFormation(_config.Formation.UnitDistanceFactor, _config.Formation.UnitRadius, i);
 
-                _container.GetChild(i).transform
+                var unitTR = _container.GetChild(i).transform;
+                unitTR.rotation = Quaternion.Euler(_container.transform.forward * -1f);
+                
+                unitTR
                     .DOLocalMove(newPos, duration)
                     .SetEase(Ease.OutBack);
             }

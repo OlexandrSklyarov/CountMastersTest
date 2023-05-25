@@ -276,8 +276,8 @@ MonoBehaviour:
   _type: 0
   _view: {fileID: 8868262485436224224}
   _addValue:
-    _min: 20
-    _max: 50
+    _min: 40
+    _max: 60
   _multValue:
     _min: 1
     _max: 3
