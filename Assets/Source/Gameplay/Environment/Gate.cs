@@ -2,6 +2,7 @@ using Source.Gameplay.Characters;
 using TMPro;
 using UnityEngine;
 using System;
+using Data.DataStruct;
 
 namespace Source.Gameplay.Environment
 {
@@ -12,6 +13,8 @@ namespace Source.Gameplay.Environment
 
         [SerializeField] private GateType _type;
         [SerializeField] private TextMeshPro _view;
+        [SerializeField] private RangeIntValue _addValue;
+        [SerializeField] private RangeIntValue _multValue;
 
         private int rndNum;
 
@@ -31,7 +34,7 @@ namespace Source.Gameplay.Environment
             {
                 case GateType.ADDER:
 
-                    rndNum = UnityEngine.Random.Range(10, 100);
+                    rndNum = UnityEngine.Random.Range(_addValue.Min, _addValue.Max);
                     RoundNumber();
                     _view.text = $"+{rndNum}";
 
@@ -39,7 +42,7 @@ namespace Source.Gameplay.Environment
 
                 case GateType.MULTIPLIER:
 
-                    rndNum = UnityEngine.Random.Range(1, 3);
+                    rndNum = UnityEngine.Random.Range(_multValue.Min, _multValue.Max);
                     RoundNumber();
                     _view.text = $"X{rndNum}";
 

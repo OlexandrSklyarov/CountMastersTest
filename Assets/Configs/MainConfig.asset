@@ -23,24 +23,26 @@ MonoBehaviour:
     <MinCount>k__BackingField: 3
     <MaxCount>k__BackingField: 250
     <HorizontalMovementLimit>k__BackingField: 8
-    <UnitDistanceFactor>k__BackingField: 0.35
-    <UnitRadius>k__BackingField: 1
-    <UnitAttackSpeed>k__BackingField: 0.2
-    <UnitAttackRotateSpeed>k__BackingField: 5
+    <AttackMoveSpeed>k__BackingField: 1.5
+    <Unit>k__BackingField:
+      <DistanceFactor>k__BackingField: 0.4
+      <Radius>k__BackingField: 0.4
+      <AttackSpeed>k__BackingField: 0.3
+      <AttackRotateSpeed>k__BackingField: 0.1
   <EnemyConfig>k__BackingField:
     <StickmanType>k__BackingField: 1
     <SpawnCount>k__BackingField:
       _min: 20
-      _max: 50
-    <UnitsSpeed>k__BackingField: 0.2
-    <UnitsRotationSpeed>k__BackingField: 5
-    <UnitDistanceFactor>k__BackingField: 0.35
-    <UnitRadius>k__BackingField: 1
+      _max: 30
+    <UnitsSpeed>k__BackingField: 3
+    <UnitsRotationSpeed>k__BackingField: 0.1
+    <UnitDistanceFactor>k__BackingField: 0.4
+    <UnitRadius>k__BackingField: 0.4
   <StickmanCollection>k__BackingField:
   - <Type>k__BackingField: 0
     <Prefab>k__BackingField: {fileID: 8665782160532471987, guid: 748b6084bd9c76b9a936458fab419147,
       type: 3}
-    <PoolSize>k__BackingField: 64
+    <PoolSize>k__BackingField: 128
   - <Type>k__BackingField: 1
     <Prefab>k__BackingField: {fileID: 8665782160532471987, guid: 91d18f452a0a4133b878579701490120,
       type: 3}

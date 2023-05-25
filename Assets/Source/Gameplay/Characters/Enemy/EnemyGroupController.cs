@@ -13,9 +13,11 @@ namespace Source.Gameplay.Characters.Enemy
     {
         private enum State { NONE, WAIT, ATTACK, DEATH }
 
-        Vector3 IEnemyGroup.Center => _tr.position;
+        Vector3 IEnemyGroup.Center => (_container.childCount > 0) ? 
+            _container.GetChild(0).position : _tr.position;
         private bool IsAttackerGroupExistOrAlive => _attackerGroup != null && _attackerGroup.IsAlive;
         private int StickmanCount => _characters.Count;
+        bool IEnemyGroup.IsAlive => StickmanCount > 0;
 
         [SerializeField] private StickmenViewInfo _counter;
 
@@ -27,8 +29,9 @@ namespace Source.Gameplay.Characters.Enemy
         private Transform _container;
         private readonly List<Stickman> _characters = new();
 
-        public event Action<IEnemyGroup> DestroyEvent;
+        public event Action<IEnemyGroup> KillAllUnitsEvent;
         public event Action<int, int> ChangeStickmanCountEvent;
+        
 
         public void Init(EnemyData config, StickmanFactory factory)
         {
@@ -70,25 +73,6 @@ namespace Source.Gameplay.Characters.Enemy
         }
 
 
-        private void OnStickmanDie(Stickman stickman)
-        {
-            var prev = StickmanCount;
-            
-            stickman.DieEvent -= OnStickmanDie;
-            _characters.Remove(stickman);
-
-            ChangeStickmanCountEvent?.Invoke(prev, StickmanCount);
-
-            if (StickmanCount > 0)
-            {
-                _counter.Hide();
-                SetState(State.DEATH);
-                DestroyEvent?.Invoke(this);
-            }
-            
-        }
-
-
         private void Formation(float duration = 1f)
         {
             for (int i = 1; i < StickmanCount; i++)
@@ -108,36 +92,44 @@ namespace Source.Gameplay.Characters.Enemy
         public void Stop() => SetState(State.NONE);
         
 
-        void IEnemyGroup.SendAttack(IAttackerGroup group)
+        void IEnemyGroup.PrepareForAttack(IAttackerGroup group)
         {
             if (_currentState == State.NONE) return;
             
             _attackerGroup = group;
             SetState(State.ATTACK);
-
-            Debug.Log("Attack!!!");
-        }
+        }           
 
 
-        public void OnUpdate()
+        void IEnemyGroup.Attack(Vector3 attackPosition)
         {
             if (_currentState != State.ATTACK) return;
             if (!IsAttackerGroupExistOrAlive) return;
 
-            Attack(_attackerGroup.Center);            
-        }    
-
-
-        private void Attack(Vector3 attackPosition)
-        {
             for (int i = 0; i < StickmanCount; i++)
             {
                 var cur = _characters[i];
-
-                if (!cur.IsActive) continue;
                 
                 cur.MoveToPosition(attackPosition, _config.UnitsSpeed, _config.UnitsRotationSpeed);  
+                cur.PlayRun();
             }            
+        }
+
+
+        private void OnStickmanDie(Stickman stickman)
+        {
+            var prev = StickmanCount;
+            
+            stickman.DieEvent -= OnStickmanDie;
+            _characters.Remove(stickman);
+
+            ChangeStickmanCountEvent?.Invoke(prev, StickmanCount);
+
+            if (StickmanCount > 0) return;
+            
+            _counter.Hide();
+            SetState(State.DEATH);
+            KillAllUnitsEvent?.Invoke(this);                        
         }
     }
 }

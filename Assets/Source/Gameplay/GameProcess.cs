@@ -64,7 +64,6 @@ namespace Source.Gameplay
         {
             _input?.OnUpdate();
             _playerController?.OnUpdate();
-            _enemyContainer?.OnUpdate();
         }
 
 

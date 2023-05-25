@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using DG.Tweening;
 using Source.Data;
 using Source.Gameplay.Characters.Enemy;
@@ -19,9 +18,9 @@ namespace Source.Gameplay.Characters
         Transform IStickmanController.Transform => _tr;
         private int StickmanCount => _characters.Count;
         bool IAttackerGroup.IsAlive => StickmanCount > 0;
-        Vector3 IAttackerGroup.Center => _tr.position;
-        List<Stickman> IAttackerGroup.Units => _characters;
-        private bool IsCanAttack => _state == State.ATTACK && _enemyGroup != null;
+        private bool IsCanAttack => _state == State.ATTACK && _enemyGroup != null && _enemyGroup.IsAlive;
+        Vector3 Center => (_container.childCount > 0) ? 
+            _container.GetChild(0).position : _tr.position;
 
         [SerializeField] private StickmenViewInfo _counter;
 
@@ -77,54 +76,77 @@ namespace Source.Gameplay.Characters
         }
 
 
-        private void Formation(float duration = 1f)
+        private void Formation(float duration = 1f, bool includeFirstUnit = false)
         {
-            for (int i = 1; i < StickmanCount; i++)
+            var start = (includeFirstUnit) ? 0 : 1;
+
+            for (int i = start; i < StickmanCount; i++)
             {    
-                var newPos = UnitExtensions.GetPositionInSpiralFormation(_config.UnitDistanceFactor, _config.UnitRadius, i);
+                var newPos = UnitExtensions.GetPositionInSpiralFormation(
+                    _config.Unit.DistanceFactor, _config.Unit.Radius, i); 
 
                 _container.GetChild(i).transform
                     .DOLocalMove(newPos, duration)
                     .SetEase(Ease.OutBack);
             }
         }
-
-
-        private void OnStickmanDie(Stickman stickman)
-        {
-            var prev = StickmanCount;
-            
-            stickman.DieEvent -= OnStickmanDie;
-            _characters.Remove(stickman);
-
-            ChangeStickmanCountEvent?.Invoke(prev, StickmanCount);
-
-            if (StickmanCount > 0) return;
-
-            FailureEvent?.Invoke();
-            _counter.Hide();
-        }
-
+       
 
         void IStickmanController.OnUpdate()
         {
             if (IsCanAttack)
             {
                 Attack(_enemyGroup.Center);
+                _enemyGroup.Attack(Center);
             }
         }
 
 
         private void Attack(Vector3 attackPosition)
         {
+            _tr.Translate(_tr.forward * _config.AttackMoveSpeed * Time.deltaTime);
+            
             for (int i = 0; i < StickmanCount; i++)
             {
-                var cur = _characters[i];
+                var cur = _characters[i];                
+                cur.MoveToPosition(attackPosition, _config.Unit.AttackSpeed, _config.Unit.AttackRotateSpeed);  
+                cur.PlayRun();
+            } 
+        }
 
-                if (!cur.IsActive) continue;
-                
-                cur.MoveToPosition(attackPosition, _config.UnitAttackSpeed, _config.UnitAttackRotateSpeed);  
+
+        void IStickmanController.Move(Vector3 newPos)
+        {
+            switch (_state)
+            {
+                case State.NORMAL:
+
+                    ClampHorizontal(ref newPos);
+                    _tr.position = newPos;
+                    Run();
+
+                    break;
             }            
+        }
+
+
+        private void ClampHorizontal(ref Vector3 newPos)
+        {
+            var countProgress = (1f - Mathf.InverseLerp(_config.MinCount, _config.MaxCount, StickmanCount)); 
+            var limit = _config.HorizontalMovementLimit * countProgress;  
+            newPos.x = Mathf.Clamp(newPos.x, -limit, limit);
+        }
+
+
+        private void Run()
+        {
+            _characters.ForEach(s => s.PlayRun());
+        }
+
+
+        void IStickmanController.Stop()
+        {
+            _characters.ForEach(s => s.PlayStop()); 
         }
 
 
@@ -134,8 +156,8 @@ namespace Source.Gameplay.Characters
 
             if (other.TryGetComponent(out IEnemyGroup enemyGroup)) 
             { 
-                enemyGroup.DestroyEvent += OnDestroyEnemyGroup;
-                enemyGroup.SendAttack(this);
+                enemyGroup.KillAllUnitsEvent += OnAttackCompleted;
+                enemyGroup.PrepareForAttack(this);
                 _enemyGroup = enemyGroup;
 
                 SetState(State.ATTACK);
@@ -143,10 +165,11 @@ namespace Source.Gameplay.Characters
         }
 
 
-        private void OnDestroyEnemyGroup(IEnemyGroup group)
+        private void OnAttackCompleted(IEnemyGroup group)
         {
-            group.DestroyEvent -= OnDestroyEnemyGroup;
+            group.KillAllUnitsEvent -= OnAttackCompleted;
             SetState(State.NORMAL);
+            Formation(includeFirstUnit: true);
         }
 
 
@@ -162,30 +185,19 @@ namespace Source.Gameplay.Characters
         }
 
 
-        void IStickmanController.Move(Vector3 newPos)
+        private void OnStickmanDie(Stickman stickman)
         {
-            ClampHorizontal(ref newPos);
-            _tr.position = newPos;
+            var prev = StickmanCount;
+            
+            stickman.DieEvent -= OnStickmanDie;
+            _characters.Remove(stickman);
 
-            _characters.ForEach(s => 
-            {
-                if (s.IsActive) s.PlayRun();
-            });
-        }
+            ChangeStickmanCountEvent?.Invoke(prev, StickmanCount);           
 
+            if (StickmanCount > 0) return;
 
-        private void ClampHorizontal(ref Vector3 newPos)
-        {
-            var limit = _config.HorizontalMovementLimit * 
-                (1f - Mathf.InverseLerp(_config.MinCount, _config.MaxCount, StickmanCount)); 
-
-            newPos.x = Mathf.Clamp(newPos.x, -limit, limit);
-        }
-
-
-        void IStickmanController.Stop()
-        {
-            _characters.ForEach(s => s.PlayStop()); 
+            FailureEvent?.Invoke();
+            _counter.Hide();
         }
     }
 }

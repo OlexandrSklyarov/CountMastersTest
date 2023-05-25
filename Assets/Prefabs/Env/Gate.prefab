@@ -275,6 +275,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _type: 0
   _view: {fileID: 8868262485436224224}
+  _addValue:
+    _min: 20
+    _max: 50
+  _multValue:
+    _min: 1
+    _max: 3
 --- !u!65 &4126570273176379754
 BoxCollider:
   m_ObjectHideFlags: 0

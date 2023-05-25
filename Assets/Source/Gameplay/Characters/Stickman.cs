@@ -8,7 +8,10 @@ namespace Source.Gameplay.Characters
     [RequireComponent(typeof(Rigidbody), typeof(CapsuleCollider), typeof(Animator))]
     public class Stickman : MonoBehaviour, IDamage
     {
-        public bool IsActive {get; private set;}
+        public StickmanType Type => _myType;
+        public bool IsAlive {get; private set;}
+
+        [SerializeField] private StickmanType _myType;
 
         private IFactoryStorage<Stickman> _storage;
         private Transform _tr;
@@ -16,14 +19,13 @@ namespace Source.Gameplay.Characters
         private int _runState;
         private bool _isInit;
 
-
         public event Action<Stickman> DieEvent;
 
 
         public void Init(IFactoryStorage<Stickman> storage)
         {
             _storage = storage;
-            IsActive = true;
+            IsAlive = true;
 
             if (!_isInit)
             {
@@ -62,9 +64,25 @@ namespace Source.Gameplay.Characters
 
         public void Die()
         {
-            IsActive = false;
+            IsAlive = false;
             DieEvent?.Invoke(this);
             _storage.ReturnToStorage(this);
+        }
+
+
+        private void OnTriggerEnter(Collider other) 
+        {
+            if (other.TryGetComponent(out Stickman stickman) && IsEnemyAndAlive(stickman))
+            {
+                stickman.Die();
+                Die();
+            }
+        }
+
+
+        private bool IsEnemyAndAlive(Stickman other)
+        {
+            return _myType != other.Type && other.IsAlive;
         }
     }
 

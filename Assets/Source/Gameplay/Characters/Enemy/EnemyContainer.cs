@@ -20,12 +20,6 @@ namespace Source.Gameplay.Characters.Enemy
         public void Stop()
         {
             Array.ForEach(_unitGroups, g => g.Stop());
-        }
-
-
-        public void OnUpdate()
-        {
-            Array.ForEach(_unitGroups, g => g.OnUpdate());
-        }
+        }        
     }
 }
