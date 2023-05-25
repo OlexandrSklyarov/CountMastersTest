@@ -3,6 +3,7 @@ using Cinemachine;
 using Common.Input;
 using Source.Data;
 using Source.Gameplay.Characters;
+using Source.Gameplay.Characters.Enemy;
 using Source.Gameplay.Player;
 using Source.Services;
 using UnityEngine;
@@ -12,6 +13,7 @@ namespace Source.Gameplay
     public class GameProcess
     {
         private readonly MainConfig _config;
+        private readonly EnemyContainer _enemyContainer;
         private readonly TouchInputManager _input;
         private readonly PlayerController _playerController;
 
@@ -19,9 +21,11 @@ namespace Source.Gameplay
         public event Action FailureEvent;           
 
 
-        public GameProcess(Transform _playerSpawnPoint, Characters.Enemy.EnemyContainer _enemyContainer, CinemachineVirtualCamera camera)
+        public GameProcess(Transform _playerSpawnPoint, Characters.Enemy.EnemyContainer enemyContainer, 
+            CinemachineVirtualCamera camera)
         {
             _config = ProjectContext.Instance.MainConfig;
+            _enemyContainer = enemyContainer;
 
             _input = new TouchInputManager();
 
@@ -60,6 +64,7 @@ namespace Source.Gameplay
         {
             _input?.OnUpdate();
             _playerController?.OnUpdate();
+            _enemyContainer?.OnUpdate();
         }
 
 
@@ -74,6 +79,7 @@ namespace Source.Gameplay
         {
             _input?.OnDisable();
             _playerController?.Disable();
+            _enemyContainer?.Stop();
         }
 
 

@@ -7,11 +7,11 @@ namespace Source.Gameplay.Characters.Enemy
 {
     public class EnemyContainer : MonoBehaviour
     {
-        private EnemyGroup[] _unitGroups;
+        private EnemyGroupController[] _unitGroups;
 
         public void Init(EnemyData enemyConfig, StickmanFactory factory)
         {
-            _unitGroups = GetComponentsInChildren<EnemyGroup>();
+            _unitGroups = GetComponentsInChildren<EnemyGroupController>();
 
             Array.ForEach(_unitGroups, g => g.Init(enemyConfig, factory));
         }
@@ -20,6 +20,12 @@ namespace Source.Gameplay.Characters.Enemy
         public void Stop()
         {
             Array.ForEach(_unitGroups, g => g.Stop());
+        }
+
+
+        public void OnUpdate()
+        {
+            Array.ForEach(_unitGroups, g => g.OnUpdate());
         }
     }
 }

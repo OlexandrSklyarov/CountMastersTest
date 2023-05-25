@@ -12,5 +12,7 @@ namespace Source.Data
         [field: SerializeField, Min(1f)] public float HorizontalMovementLimit {get; private set;} = 1f;
         [field: SerializeField, Min(0.1f)] public float UnitDistanceFactor {get; private set;} = 1f;
         [field: SerializeField, Min(0.1f)] public float UnitRadius {get; private set;} = 0.3f;
+        [field: SerializeField, Min(0.1f)] public float UnitAttackSpeed {get; private set;} = 0.2f;
+        [field: SerializeField, Min(0.1f)] public float UnitAttackRotateSpeed {get; private set;} = 5f;
     }
 }

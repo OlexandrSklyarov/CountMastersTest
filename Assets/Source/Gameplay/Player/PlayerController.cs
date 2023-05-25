@@ -65,7 +65,8 @@ namespace Source.Gameplay.Player
         public void OnUpdate()
         {
             if (!_isActive) return;
-            
+
+            _stickmanController?.OnUpdate();            
         }
 
 

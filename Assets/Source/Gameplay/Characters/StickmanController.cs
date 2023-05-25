@@ -13,19 +13,25 @@ namespace Source.Gameplay.Characters
 {
     [RequireComponent(typeof(SphereCollider), typeof(Rigidbody))]
     public class StickmanController : MonoBehaviour, 
-        IStickmanController, IStickmanInfo, IInteractTarget, IAttackGroup
+        IStickmanController, IStickmanInfo, IInteractTarget, IAttackerGroup
     {
+        private enum State {NORMAL, ATTACK}
         Transform IStickmanController.Transform => _tr;
         private int StickmanCount => _characters.Count;
-        bool IAttackGroup.IsAlive => StickmanCount > 0;
-        Vector3 IAttackGroup.Center => _tr.position;
+        bool IAttackerGroup.IsAlive => StickmanCount > 0;
+        Vector3 IAttackerGroup.Center => _tr.position;
+        List<Stickman> IAttackerGroup.Units => _characters;
+        private bool IsCanAttack => _state == State.ATTACK && _enemyGroup != null;
 
-        [SerializeField] private Transform _container;
         [SerializeField] private StickmenViewInfo _counter;
+
+        private Transform _container;
         private StickmanControllerData _config;
         private StickmanFactory _factory;
         private Transform _tr;
         private List<Stickman> _characters = new();
+        private IEnemyGroup _enemyGroup;
+        private State _state;
 
         public event Action<int, int> ChangeStickmanCountEvent;
         public event Action FailureEvent;
@@ -38,8 +44,17 @@ namespace Source.Gameplay.Characters
             _tr = transform;
             _counter.Init(this);
 
+            _container = new GameObject("Container").transform;
+            _container.SetLocalPositionAndRotation(_tr.position, _tr.rotation);
+            _container.SetParent(_tr);
+
             Populate(_config.StartStickmanCount);
+
+            SetState(State.NORMAL);
         }
+        
+
+        private void SetState(State s) => _state = s;
 
 
         private void Populate(int num)
@@ -52,24 +67,13 @@ namespace Source.Gameplay.Characters
                 stickman.transform.SetPositionAndRotation(_container.position, _container.rotation);
                 stickman.transform.SetParent(_container);
                 stickman.DieEvent += OnStickmanDie;
+
                 _characters.Add(stickman);
             }
 
             Formation();
 
             ChangeStickmanCountEvent?.Invoke(prev, StickmanCount);
-        }
-
-
-        private void OnStickmanDie(Stickman stickman)
-        {
-            stickman.DieEvent -= OnStickmanDie;
-            _characters.Remove(stickman);
-
-            if (StickmanCount > 0) return;
-
-            FailureEvent?.Invoke();
-            _counter.Hide();
         }
 
 
@@ -86,6 +90,44 @@ namespace Source.Gameplay.Characters
         }
 
 
+        private void OnStickmanDie(Stickman stickman)
+        {
+            var prev = StickmanCount;
+            
+            stickman.DieEvent -= OnStickmanDie;
+            _characters.Remove(stickman);
+
+            ChangeStickmanCountEvent?.Invoke(prev, StickmanCount);
+
+            if (StickmanCount > 0) return;
+
+            FailureEvent?.Invoke();
+            _counter.Hide();
+        }
+
+
+        void IStickmanController.OnUpdate()
+        {
+            if (IsCanAttack)
+            {
+                Attack(_enemyGroup.Center);
+            }
+        }
+
+
+        private void Attack(Vector3 attackPosition)
+        {
+            for (int i = 0; i < StickmanCount; i++)
+            {
+                var cur = _characters[i];
+
+                if (!cur.IsActive) continue;
+                
+                cur.MoveToPosition(attackPosition, _config.UnitAttackSpeed, _config.UnitAttackRotateSpeed);  
+            }            
+        }
+
+
         private void OnTriggerEnter(Collider other) 
         {
             if (other.TryGetComponent(out IInteractable item)) { item.Interact(this); } 
@@ -93,7 +135,10 @@ namespace Source.Gameplay.Characters
             if (other.TryGetComponent(out IEnemyGroup enemyGroup)) 
             { 
                 enemyGroup.DestroyEvent += OnDestroyEnemyGroup;
-                
+                enemyGroup.SendAttack(this);
+                _enemyGroup = enemyGroup;
+
+                SetState(State.ATTACK);
             } 
         }
 
@@ -101,6 +146,7 @@ namespace Source.Gameplay.Characters
         private void OnDestroyEnemyGroup(IEnemyGroup group)
         {
             group.DestroyEvent -= OnDestroyEnemyGroup;
+            SetState(State.NORMAL);
         }
 
 
@@ -121,7 +167,10 @@ namespace Source.Gameplay.Characters
             ClampHorizontal(ref newPos);
             _tr.position = newPos;
 
-            _characters.ForEach(s => s.PlayRun());
+            _characters.ForEach(s => 
+            {
+                if (s.IsActive) s.PlayRun();
+            });
         }
 
 

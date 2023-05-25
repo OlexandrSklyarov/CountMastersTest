@@ -9,6 +9,7 @@ namespace Source.Gameplay.Characters
 
         event Action FailureEvent;
 
+        void OnUpdate();
         void Move(Vector3 vector3);
         void Stop();
     }
