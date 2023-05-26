@@ -6,6 +6,7 @@ namespace Source.Gameplay.Environment
     [RequireComponent(typeof(BoxCollider), typeof(Rigidbody))]
     public class JumpTrigger : MonoBehaviour
     {
+        [SerializeField, Range(1f, 8f)] private float _jumpPower = 4f;
         private void Awake() 
         {
             GetComponent<BoxCollider>().isTrigger = true;
@@ -17,7 +18,7 @@ namespace Source.Gameplay.Environment
         {
             if (other.TryGetComponent(out IJump item))
             {
-                item.ActiveJump();
+                item.ActiveJump(_jumpPower);
             }    
         }
     }

@@ -12,5 +12,6 @@ namespace Source.Gameplay.Characters.Enemy
         event Action<IEnemyGroup> KillAllUnitsEvent;
         void PrepareForAttack(IAttackerGroup group);
         void Attack(Vector3 attackPosition);
+        void StopAttack();
     }
 }

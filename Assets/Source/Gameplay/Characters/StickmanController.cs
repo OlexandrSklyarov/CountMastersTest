@@ -221,9 +221,9 @@ namespace Source.Gameplay.Characters
         }
         
 
-        private void OnStickmanJump(Stickman stickman)
+        private void OnStickmanJump(Stickman stickman, float jumpPower)
         {
-            stickman.Jump(_config.Movement.JumpDuration);
+            stickman.Jump(jumpPower, _config.Movement.JumpDuration);
 
             if (_state == State.JUMP) return;
 
@@ -250,8 +250,14 @@ namespace Source.Gameplay.Characters
 
             if (StickmanCount > 0) return;
 
+            Failure();
+        }
+
+        private void Failure()
+        {
+            _enemyGroup?.StopAttack();
             FailureEvent?.Invoke();
             _counter.Hide();
-        }        
+        }
     }
 }

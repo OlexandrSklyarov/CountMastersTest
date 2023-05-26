@@ -15,7 +15,10 @@ namespace Source.Gameplay.Characters.Enemy
 
         Vector3 IEnemyGroup.Center => (_container.childCount > 0) ? 
             _container.GetChild(0).position : _tr.position;
-        private bool IsAttackerGroupExistOrAlive => _attackerGroup != null && _attackerGroup.IsAlive;
+
+        private bool IsCanAttack => _currentState == State.ATTACK && 
+            _attackerGroup != null && _attackerGroup.IsAlive;
+
         private int StickmanCount => _characters.Count;
         bool IEnemyGroup.IsAlive => StickmanCount > 0;
 
@@ -73,9 +76,11 @@ namespace Source.Gameplay.Characters.Enemy
         }
 
 
-        private void Formation(float duration = 1f)
+        private void Formation(float duration = 1f, bool includeFirstUnit = false)
         {
-            for (int i = 1; i < StickmanCount; i++)
+            var start = (includeFirstUnit) ? 0 : 1;
+
+            for (int i = start; i < StickmanCount; i++)
             {    
                 var newPos = UnitExtensions.Formation
                     .GetPositionInSpiralFormation(_config.Formation.UnitDistanceFactor, _config.Formation.UnitRadius, i);
@@ -107,16 +112,28 @@ namespace Source.Gameplay.Characters.Enemy
 
         void IEnemyGroup.Attack(Vector3 attackPosition)
         {
-            if (_currentState != State.ATTACK) return;
-            if (!IsAttackerGroupExistOrAlive) return;
+            if (!IsCanAttack) return;
 
+            MoveToTarget(attackPosition);
+        }
+
+
+        private void MoveToTarget(Vector3 attackPosition)
+        {            
             for (int i = 0; i < StickmanCount; i++)
             {
                 var cur = _characters[i];
-                
-                cur.MoveToPosition(attackPosition, _config.UnitsSpeed, _config.UnitsRotationSpeed);  
+
+                cur.MoveToPosition(attackPosition, _config.UnitsSpeed, _config.UnitsRotationSpeed);
                 cur.PlayRun();
-            }            
+            }
+        }
+
+
+        void IEnemyGroup.StopAttack()
+        {
+            SetState(State.WAIT);
+            _characters.ForEach(c => c.PlayStop());
         }
 
 

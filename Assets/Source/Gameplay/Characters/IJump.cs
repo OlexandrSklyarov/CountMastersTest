@@ -3,6 +3,6 @@ namespace Source.Gameplay.Characters
 {
     public interface IJump
     {
-        void ActiveJump();
+        void ActiveJump(float _jumpPower);
     }
 }

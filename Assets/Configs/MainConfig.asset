@@ -20,10 +20,10 @@ MonoBehaviour:
     <MaxCount>k__BackingField: 250
     <Movement>k__BackingField:
       <VerticalSpeed>k__BackingField: 12
-      <HorizontalSpeed>k__BackingField: 1
+      <HorizontalSpeed>k__BackingField: 1.5
       <HorizontalMovementLimit>k__BackingField: 7
       <AttackMoveSpeed>k__BackingField: 2
-      <JumpDuration>k__BackingField: 2
+      <JumpDuration>k__BackingField: 2.5
     <Unit>k__BackingField:
       <DistanceFactor>k__BackingField: 0.35
       <Radius>k__BackingField: 0.4

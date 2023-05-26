@@ -24,7 +24,7 @@ namespace Source.Gameplay.Characters
         private Sequence _tween;
 
         public event Action<Stickman> DieEvent;
-        public event Action<Stickman> JumpEvent;
+        public event Action<Stickman, float> JumpEvent;
 
 
         public void Init(IFactoryStorage<Stickman> storage)
@@ -92,12 +92,12 @@ namespace Source.Gameplay.Characters
         }
 
 
-        void IJump.ActiveJump() => JumpEvent?.Invoke(this);
+        void IJump.ActiveJump(float jumpPower) => JumpEvent?.Invoke(this, jumpPower);
 
 
-        public void Jump(float duration)
+        public void Jump(float jumpPower, float duration)
         {
-            _tween = _tr.DOLocalJump(_tr.localPosition, 3f, 1, duration);
+            _tween = _tr.DOLocalJump(_tr.localPosition, jumpPower, 1, duration);
         }
 
 
