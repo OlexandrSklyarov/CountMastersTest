@@ -82,12 +82,9 @@ namespace Source.Gameplay.Player.FSM.States
             var offset = endPosition - _startPosition;
             var curPos = _agent.StickmanController.Transform.position;
             var newPos = _controllerPosition + offset;
-            var vertical = curPos + _agent.StickmanController.Transform.forward;
-
-            var x = Mathf.Lerp(curPos.x, newPos.x, Time.deltaTime * _agent.Config.Movement.HorizontalSpeed);
-            var z = Mathf.Lerp(curPos.z, vertical.z, Time.deltaTime * _agent.Config.Movement.VerticalSpeed);
+            var vertical = curPos + _agent.StickmanController.Transform.forward;  
             
-            _agent.StickmanController.Move(new Vector3(x, curPos.y, z));
+            _agent.StickmanController.Move(newPos.x, vertical.z);
         }
 
 

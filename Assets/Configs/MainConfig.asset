@@ -12,18 +12,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dae862ceed5cef342866eaf43f111992, type: 3}
   m_Name: MainConfig
   m_EditorClassIdentifier: 
-  <PlayerConfig>k__BackingField:
-    <Movement>k__BackingField:
-      <VerticalSpeed>k__BackingField: 12
-      <HorizontalSpeed>k__BackingField: 5
   <StickmanControllerPrefab>k__BackingField: {fileID: 1303109660185840059, guid: 31b8ef9e346dd818fb90c74b0765e5a5,
     type: 3}
   <StickmenControllerConfig>k__BackingField:
     <StartStickmanCount>k__BackingField: 1
     <MinCount>k__BackingField: 3
     <MaxCount>k__BackingField: 250
-    <HorizontalMovementLimit>k__BackingField: 8
-    <AttackMoveSpeed>k__BackingField: 1.5
+    <Movement>k__BackingField:
+      <VerticalSpeed>k__BackingField: 12
+      <HorizontalSpeed>k__BackingField: 1
+      <HorizontalMovementLimit>k__BackingField: 7
+      <AttackMoveSpeed>k__BackingField: 2
+      <JumpDuration>k__BackingField: 2
     <Unit>k__BackingField:
       <DistanceFactor>k__BackingField: 0.35
       <Radius>k__BackingField: 0.4

@@ -2,11 +2,14 @@ using Services.Pooling;
 using Source.Data;
 using UnityEngine;
 using System;
+using DG.Tweening;
+using DG.Tweening.Core;
+using DG.Tweening.Plugins.Options;
 
 namespace Source.Gameplay.Characters
 {
     [RequireComponent(typeof(Rigidbody), typeof(CapsuleCollider), typeof(Animator))]
-    public class Stickman : MonoBehaviour, IDamage
+    public class Stickman : MonoBehaviour, IDamage, IJump
     {
         public StickmanType Type => _myType;
         public bool IsAlive {get; private set;}
@@ -18,8 +21,10 @@ namespace Source.Gameplay.Characters
         private Animator _animator;
         private int _runState;
         private bool _isInit;
+        private Sequence _tween;
 
         public event Action<Stickman> DieEvent;
+        public event Action<Stickman> JumpEvent;
 
 
         public void Init(IFactoryStorage<Stickman> storage)
@@ -64,6 +69,7 @@ namespace Source.Gameplay.Characters
 
         public void Die()
         {
+            _tween?.Kill();
             IsAlive = false;
             DieEvent?.Invoke(this);
             _storage.ReturnToStorage(this);
@@ -83,6 +89,24 @@ namespace Source.Gameplay.Characters
         private bool IsEnemyAndAlive(Stickman other)
         {
             return _myType != other.Type && other.IsAlive;
+        }
+
+
+        void IJump.ActiveJump() => JumpEvent?.Invoke(this);
+
+
+        public void Jump(float duration)
+        {
+            _tween = _tr.DOLocalJump(_tr.localPosition, 3f, 1, duration);
+        }
+
+
+        public void SetLocalPositionAndRotation(Vector3 pos, Vector3 rot, float duration)
+        {
+            _tween?.Kill();
+            _tween = DOTween.Sequence();
+            _tween.Append(_tr.DOLocalMove(pos, duration).SetEase(Ease.OutBack));
+            _tween.Append(_tr.DOLocalRotate(rot, duration).SetEase(Ease.OutBack));
         }
     }
 
