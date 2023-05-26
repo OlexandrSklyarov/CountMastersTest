@@ -3,9 +3,12 @@ using UnityEngine;
 namespace Source.Gameplay.Environment
 {
     public class Rotater : MonoBehaviour
-    {
+    {              
         [SerializeField, Min(0.1f)] private float _speed = 3f;
+        [SerializeField] bool _isInvertRotation;
+
         private Transform _tr;
+        
 
         private void Awake() 
         {
@@ -16,7 +19,7 @@ namespace Source.Gameplay.Environment
        
         private void Update()
         {
-            _tr.Rotate(_tr.up * _speed * Time.deltaTime);
+            _tr.Rotate(_tr.up * _speed * ((_isInvertRotation)? -1f : 1f) * Time.deltaTime, Space.Self);
         }
     }
 }
