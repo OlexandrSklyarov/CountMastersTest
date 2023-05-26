@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 345b521f252e20eae94f9e3f5d5c14da
+guid: f910111457c7de47cbde27bb16fdac30
 ModelImporter:
   serializedVersion: 21300
   internalIDToNameTable: []
@@ -7,13 +7,8 @@ ModelImporter:
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
-      name: DamageCilinder
-    second: {fileID: 2100000, guid: ce3de84132ab88e3b847c41906791da1, type: 2}
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: DamageCilinder_2
-    second: {fileID: 2100000, guid: 4c307a4cb11e3a83fb527a6d7b4ade2e, type: 2}
+      name: M_EnvironMent
+    second: {fileID: 2100000, guid: 490daf2b7f4571816b06e25e08923f26, type: 2}
   materials:
     materialImportMode: 2
     materialName: 0
