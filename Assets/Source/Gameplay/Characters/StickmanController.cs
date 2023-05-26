@@ -1,7 +1,6 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using DG.Tweening;
 using Source.Data;
 using Source.Gameplay.Characters.Enemy;
 using Source.Gameplay.Environment;
@@ -13,7 +12,7 @@ namespace Source.Gameplay.Characters
 {
     [RequireComponent(typeof(SphereCollider), typeof(Rigidbody))]
     public class StickmanController : MonoBehaviour, 
-        IStickmanController, IStickmanInfo, IInteractTarget, IAttackerGroup
+        IStickmanController, IStickmanInfo, IInteractTarget, IAttackerGroup, IFormationGroup
     {
         private enum State {NORMAL, ATTACK, JUMP}
         Transform IStickmanController.Transform => _tr;
@@ -87,12 +86,15 @@ namespace Source.Gameplay.Characters
         {
             stickman.DieEvent -= OnStickmanDie;
             stickman.JumpEvent -= OnStickmanJump;
-        }        
+        }    
 
 
-        private void Formation(float duration = 1f, bool includeFirstUnit = false)
+        void IFormationGroup.FormationGroup() => Formation(isFirstInclude: true);   
+
+
+        private void Formation(float duration = 1f, bool isFirstInclude = false)
         {
-            var start = (includeFirstUnit) ? 0 : 1;
+            var start = (isFirstInclude) ? 0 : 1;
             
             for (int i = start; i < StickmanCount; i++)
             {    
@@ -234,6 +236,7 @@ namespace Source.Gameplay.Characters
             {
                 yield return new WaitForSeconds(duration);
                 SetState(State.NORMAL);
+                Formation(isFirstInclude: true);
             }
         }
 
