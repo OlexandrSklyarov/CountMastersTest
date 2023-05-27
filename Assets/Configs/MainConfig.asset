@@ -33,9 +33,10 @@ MonoBehaviour:
     <Formation>k__BackingField: {fileID: 11400000, guid: 6bd14cb9780e95e05a130151a6a56c96,
       type: 2}
     <Tower>k__BackingField:
-      <MaxUnitPerRow>k__BackingField: 10
+      <MaxUnitPerRow>k__BackingField: 15
       <X_Offset>k__BackingField: 0.4
       <Y_Offset>k__BackingField: 1.3
+      <DivScale>k__BackingField: 0.683
   <EnemyConfig>k__BackingField:
     <StickmanType>k__BackingField: 1
     <SpawnCount>k__BackingField:
