@@ -1,6 +1,7 @@
 using UnityEngine;
 using Cinemachine;
 using Source.Gameplay.Characters.Enemy;
+using DG.Tweening;
 
 namespace Source.Gameplay
 {
@@ -18,6 +19,8 @@ namespace Source.Gameplay
 
         private void Start()
         {
+            DOTween.SetTweensCapacity(500, 100);
+
             _gameProcess = new GameProcess(_playerSpawnPoint, _enemyContainer, _camera);
             _gameProcess.CompletedEvent += OnCompleted;
             _gameProcess.FailureEvent += OnFailure;

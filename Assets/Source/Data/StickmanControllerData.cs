@@ -12,6 +12,7 @@ namespace Source.Data
         [field: Space(10f), SerializeField] public MovementConfig Movement {get; private set;}
         [field: Space(10f), SerializeField] public UnitConfig Unit {get; private set;}
         [field: Space(10f), SerializeField] public UnitFormationData Formation {get; private set;}
+        [field: Space(10f), SerializeField] public TowerData Tower {get; private set;}
 
 
         [Serializable]

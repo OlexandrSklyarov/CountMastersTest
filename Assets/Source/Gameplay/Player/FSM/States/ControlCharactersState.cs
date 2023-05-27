@@ -1,4 +1,3 @@
-using System;
 using Common.Input;
 using UnityEngine;
 using Phase = UnityEngine.InputSystem.TouchPhase;

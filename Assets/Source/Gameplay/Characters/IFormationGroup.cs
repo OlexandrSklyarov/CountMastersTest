@@ -3,6 +3,7 @@ namespace Source.Gameplay.Characters
 {
     public interface IFormationGroup
     {
-        void FormationGroup();
+        void FinishFormation();
+        void Refresh();
     }
 }

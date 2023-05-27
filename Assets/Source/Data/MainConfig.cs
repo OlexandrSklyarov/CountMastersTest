@@ -4,7 +4,7 @@ using UnityEngine;
 namespace Source.Data
 {
     [CreateAssetMenu(menuName = "SO/MainConfig", fileName = "MainConfig")]
-    public class MainConfig : ScriptableObject
+    public sealed class MainConfig : ScriptableObject
     {
         [field: SerializeField] public PlayerData PlayerConfig {get; private set;}
         [field: Space(20f), SerializeField] public StickmanController StickmanControllerPrefab{get; private set;}

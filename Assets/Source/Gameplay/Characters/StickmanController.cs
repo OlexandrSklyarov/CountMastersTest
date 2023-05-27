@@ -1,12 +1,12 @@
 using System;
+using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
-using Source.Data;
 using Source.Gameplay.Characters.Enemy;
 using Source.Gameplay.Environment;
 using Source.Gameplay.Extensions;
 using Source.Services;
-using UnityEngine;
+using Source.Data;
 
 namespace Source.Gameplay.Characters
 {
@@ -14,7 +14,7 @@ namespace Source.Gameplay.Characters
     public class StickmanController : MonoBehaviour, 
         IStickmanController, IStickmanInfo, IInteractTarget, IAttackerGroup, IFormationGroup
     {
-        private enum State {NORMAL, ATTACK, JUMP}
+        private enum State {NORMAL, ATTACK, JUMP, FINISH}
         Transform IStickmanController.Transform => _tr;
         private int StickmanCount => _characters.Count;
         bool IAttackerGroup.IsAlive => StickmanCount > 0;
@@ -23,7 +23,7 @@ namespace Source.Gameplay.Characters
             _container.GetChild(0).position : _tr.position;
 
         [SerializeField] private StickmenViewInfo _counter;
-
+        private TowerProvider _towerProvider;
         private Transform _container;
         private StickmanControllerData _config;
         private StickmanFactory _factory;
@@ -42,6 +42,7 @@ namespace Source.Gameplay.Characters
             _factory = factory;
             _tr = transform;
             _counter.Init(this);
+            _towerProvider = new TowerProvider(_config.Tower);
 
             _container = new GameObject("Container").transform;
             _container.SetLocalPositionAndRotation(_tr.position, _tr.rotation);
@@ -56,7 +57,6 @@ namespace Source.Gameplay.Characters
         private void SetState(State s) 
         {
             _state = s;
-            Debug.Log($"state {s}");
         }
 
 
@@ -89,7 +89,28 @@ namespace Source.Gameplay.Characters
         }    
 
 
-        void IFormationGroup.FormationGroup() => Formation(isFirstInclude: true);   
+        void IFormationGroup.Refresh() => Formation(isFirstInclude: true);   
+
+
+        void IFormationGroup.FinishFormation()
+        {
+            var positions = _towerProvider.Create(StickmanCount);
+            var index = 0;
+
+            foreach(var pos in positions)
+            {
+                _characters[index].SetLocalPositionAndRotation
+                (
+                    pos, 
+                    _container.transform.forward,
+                    1f
+                );
+
+                index++;
+            }
+
+            SetState(State.FINISH);
+        }  
 
 
         private void Formation(float duration = 1f, bool isFirstInclude = false)
@@ -129,7 +150,14 @@ namespace Source.Gameplay.Characters
 
                     _tr.Translate(_tr.forward * _config.Movement.VerticalSpeed * Time.deltaTime);
 
-                break;                
+                break;   
+
+                case State.FINISH:
+
+                    //_tr.Translate(_tr.forward * _config.Movement.VerticalSpeed * Time.deltaTime);
+                    Debug.Log("Finish!!!");
+
+                break;             
             }
         }
 

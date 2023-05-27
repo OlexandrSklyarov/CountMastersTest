@@ -9,7 +9,7 @@ namespace Source.Gameplay.Environment
         {
             if (other.TryGetComponent(out IFormationGroup group))
             {
-                group.FormationGroup();
+                group.Refresh();
             } 
         }
     }
