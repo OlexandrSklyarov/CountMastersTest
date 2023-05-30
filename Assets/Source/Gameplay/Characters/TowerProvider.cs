@@ -20,20 +20,12 @@ namespace Source.Gameplay.Characters
 
         public IEnumerable<Vector3> Create(int stickmanCount)
         {
-            Debug.Log($"before units {stickmanCount}");
-
-            FillData(stickmanCount);
-
-            int sum = _towerRowCounts.Sum();
-            Debug.Log($"after units {sum}");
-            foreach (var count in _towerRowCounts)
-                Debug.Log($"after units {count}");
-
+            CalculateRows(stickmanCount);
             return GetPositions(stickmanCount);
         }
 
 
-        private void FillData(int count)
+        private void CalculateRows(int count)
         {            
             var rowCount = 1;
 
