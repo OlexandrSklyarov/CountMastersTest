@@ -34,26 +34,28 @@ namespace Source.Gameplay.Characters
 
 
         private void FillData(int count)
-        {
-            var unitInRow = (count / _config.MaxUnitPerRow >= _config.MaxUnitPerRow) ?
-                _config.MaxUnitPerRow : (int)(_config.MaxUnitPerRow * _config.DivScale);
+        {            
+            var rowCount = 1;
 
             while (count > 0)
             {
-                if (count <= unitInRow)
+                if (count >= rowCount)
                 {
-                    _towerRowCounts.Add(count);
-                    break;
-                }
-                
-                for (var i = 0; i < 2; i++)
-                {
-                    _towerRowCounts.Add(unitInRow);
-                    count -= unitInRow;
+                    _towerRowCounts.Add(rowCount);
+                    count -= rowCount;
+                    rowCount++;
 
+                    if (rowCount > _config.MaxCountInRow) rowCount = _config.MaxCountInRow;
+
+                    continue;
                 }
 
-                unitInRow = Mathf.Max(1, --unitInRow);
+                for(int i = 0; i < count; i++)
+                {
+                    _towerRowCounts[^(i + 1)] += 1;
+                }                
+               
+                count = 0; 
             }
         }
 
@@ -65,6 +67,8 @@ namespace Source.Gameplay.Characters
 
             var sizeCell = _config.X_Offset * 2;
             var offset_Y = 0f;
+
+           _towerRowCounts.Reverse();
 
             foreach (var countInLine in _towerRowCounts)
             {

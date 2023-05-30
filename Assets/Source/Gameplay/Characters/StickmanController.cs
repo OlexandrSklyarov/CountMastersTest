@@ -245,9 +245,9 @@ namespace Source.Gameplay.Characters
         }
 
 
-        void IInteractTarget.AddStickman(int count)
+        void IInteractTarget.AddStickman(int amount)
         {
-            Populate(StickmanCount + count);
+            Populate(amount);
         }
         
 

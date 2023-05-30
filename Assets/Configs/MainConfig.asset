@@ -35,8 +35,8 @@ MonoBehaviour:
     <Tower>k__BackingField:
       <MaxUnitPerRow>k__BackingField: 15
       <X_Offset>k__BackingField: 0.4
-      <Y_Offset>k__BackingField: 1.3
-      <DivScale>k__BackingField: 0.683
+      <Y_Offset>k__BackingField: 1.4
+      <MaxCountInRow>k__BackingField: 13
   <EnemyConfig>k__BackingField:
     <StickmanType>k__BackingField: 1
     <SpawnCount>k__BackingField:
