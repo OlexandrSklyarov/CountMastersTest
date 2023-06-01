@@ -3,8 +3,7 @@ using Source.Data;
 using UnityEngine;
 using System;
 using DG.Tweening;
-using DG.Tweening.Core;
-using DG.Tweening.Plugins.Options;
+using Source.Gameplay.Environment;
 
 namespace Source.Gameplay.Characters
 {
@@ -20,10 +19,12 @@ namespace Source.Gameplay.Characters
         private Transform _tr;
         private Animator _animator;
         private int _runState;
-        private bool _isInit;
         private Sequence _tween;
+        private bool _isInit;
+        private bool _isFinished;
 
         public event Action<Stickman> DieEvent;
+        public event Action<Stickman, int> FinishEvent;
         public event Action<Stickman, float> JumpEvent;
 
 
@@ -83,6 +84,16 @@ namespace Source.Gameplay.Characters
                 stickman.Die();
                 Die();
             }
+
+            if (other.TryGetComponent(out IFinishBlock block))
+            {
+                StopSequence();
+                _isFinished = true;
+                _tr.SetParent(null);
+                
+                FinishEvent?.Invoke(this, block.Points);
+
+            }
         }
 
 
@@ -103,12 +114,20 @@ namespace Source.Gameplay.Characters
 
         public void SetLocalPositionAndRotation(Vector3 pos, Vector3 rot, float duration)
         {
-            _tween?.Kill();
+            StopSequence();
+
+            if (_isFinished) return;
+
             _tween = DOTween.Sequence();
             _tween.Append(_tr.DOLocalMove(pos, duration).SetEase(Ease.OutBack));
             _tween.Append(_tr.DOLocalRotate(rot, duration).SetEase(Ease.OutBack));
         }
+        
+        
+        private void StopSequence() => _tween?.Kill();
     }
+
+
 
 
     public enum StickmanType

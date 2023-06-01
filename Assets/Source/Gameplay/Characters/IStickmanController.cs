@@ -8,6 +8,7 @@ namespace Source.Gameplay.Characters
         Transform Transform {get;}
 
         event Action FailureEvent;
+        event Action<int> CompletedEvent;
 
         void OnUpdate();
         void Move(float x, float z);

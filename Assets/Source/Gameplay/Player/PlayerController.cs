@@ -22,7 +22,7 @@ namespace Source.Gameplay.Player
         private BasePlayerState _currentState;
         private bool _isActive;
 
-        public event Action SuccessEvent;
+        public event Action<int> SuccessEvent;
         public event Action FailureEvent;
         
 
@@ -36,8 +36,7 @@ namespace Source.Gameplay.Player
             {
                 {typeof(WaitTapToPlayState), new WaitTapToPlayState(this, this)},
                 {typeof(ControlCharactersState), new ControlCharactersState(this, this)},
-                {typeof(LevelCompletedState), new LevelCompletedState(this, this)},
-                {typeof(LevelFailureState), new LevelFailureState(this, this)},
+                {typeof(GameStopState), new GameStopState(this, this)}
             };
 
             _currentState = _allStates.First().Value;
@@ -80,7 +79,7 @@ namespace Source.Gameplay.Player
         }
 
 
-        void IPlayer.Success() => SuccessEvent?.Invoke();
+        void IPlayer.Success(int points) => SuccessEvent?.Invoke(points);
 
 
         void IPlayer.Failure() => FailureEvent?.Invoke();

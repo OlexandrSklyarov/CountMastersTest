@@ -16,14 +16,16 @@ namespace Source.Gameplay
         private readonly EnemyContainer _enemyContainer;
         private readonly TouchInputManager _input;
         private readonly PlayerController _playerController;
+        private readonly CinemachineVirtualCamera _camera;
 
-        public event Action CompletedEvent;            
-        public event Action FailureEvent;           
+        public event Action<int> CompletedEvent;            
+        public event Action FailureEvent;     
 
 
         public GameProcess(Transform _playerSpawnPoint, Characters.Enemy.EnemyContainer enemyContainer, 
             CinemachineVirtualCamera camera)
         {
+            _camera = camera;
             _config = ProjectContext.Instance.MainConfig;
             _enemyContainer = enemyContainer;
 
@@ -34,18 +36,19 @@ namespace Source.Gameplay
             _enemyContainer.Init(_config.EnemyConfig, stickmanFactory);
 
             var stickmanController = GetStickmanController(_playerSpawnPoint, stickmanFactory);
-            
+            stickmanController.FinishStateEvent += OnFinish;
+
             _playerController = new PlayerController(_config.PlayerConfig, stickmanController, _input);
             _playerController.SuccessEvent += OnCompleted;
             _playerController.FailureEvent += OnFailure;
 
-            SetupCamera(camera, stickmanController.transform);
+            CameraSetTarget(stickmanController.transform); 
         }
         
 
-        private void SetupCamera(CinemachineVirtualCamera camera, Transform target)
+        private void CameraSetTarget(Transform target)
         {
-            camera.Follow = target;
+            _camera.Follow = target;
         }
 
 
@@ -57,7 +60,7 @@ namespace Source.Gameplay
             controller.Init(_config.StickmenControllerConfig, factory);
                 
             return controller;
-        }
+        }        
 
 
         public void OnUpdate()
@@ -78,7 +81,7 @@ namespace Source.Gameplay
         {
             _input?.OnDisable();
             _playerController?.Disable();
-            _enemyContainer?.Stop();
+            _enemyContainer?.Stop();            
         }
 
 
@@ -89,10 +92,16 @@ namespace Source.Gameplay
         }
         
 
-        private void OnCompleted()
+        private void OnFinish()
+        {
+            Debug.Log("Change camera offset");
+        }
+
+
+        private void OnCompleted(int points)
         {
             UnScribePlayerController();
-            CompletedEvent?.Invoke();
+            CompletedEvent?.Invoke(points);
         }
 
 

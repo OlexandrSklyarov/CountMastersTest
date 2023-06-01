@@ -14,9 +14,10 @@ namespace Source.Gameplay.Characters
     public class StickmanController : MonoBehaviour, 
         IStickmanController, IStickmanInfo, IInteractTarget, IAttackerGroup, IFormationGroup
     {
-        private enum State {NORMAL, ATTACK, JUMP, FINISH}
+        private enum State {NONE, NORMAL, ATTACK, JUMP, FINISH}
         Transform IStickmanController.Transform => _tr;
         private int StickmanCount => _characters.Count;
+        int IFormationGroup.Count => _characters.Count;
         bool IAttackerGroup.IsAlive => StickmanCount > 0;
         private bool IsCanAttack => _enemyGroup != null && _enemyGroup.IsAlive;
         Vector3 Center => (_container.childCount > 0) ? 
@@ -34,6 +35,8 @@ namespace Source.Gameplay.Characters
 
         public event Action<int, int> ChangeStickmanCountEvent;
         public event Action FailureEvent;
+        public event Action<int> CompletedEvent;
+        public event Action FinishStateEvent;
 
 
         public void Init(StickmanControllerData config, StickmanFactory factory)
@@ -72,20 +75,22 @@ namespace Source.Gameplay.Characters
 
                 stickman.DieEvent += OnStickmanDie;
                 stickman.JumpEvent += OnStickmanJump;
+                stickman.FinishEvent += OnStickmanFinish;
 
                 _characters.Add(stickman);
             }
 
-            Formation();
+            Formation(2f);
 
             ChangeStickmanCountEvent?.Invoke(prev, StickmanCount);
         }
-
+       
 
         private void UnSubscribe(Stickman stickman)
         {
             stickman.DieEvent -= OnStickmanDie;
             stickman.JumpEvent -= OnStickmanJump;
+            stickman.FinishEvent -= OnStickmanFinish;
         }    
 
 
@@ -109,7 +114,9 @@ namespace Source.Gameplay.Characters
                 index++;
             }
 
+            _counter.Hide();
             SetState(State.FINISH);
+            FinishStateEvent?.Invoke();
         }  
 
 
@@ -154,8 +161,7 @@ namespace Source.Gameplay.Characters
 
                 case State.FINISH:
 
-                    //_tr.Translate(_tr.forward * _config.Movement.VerticalSpeed * Time.deltaTime);
-                    Debug.Log("Finish!!!");
+                    _tr.Translate(_tr.forward * _config.Movement.VerticalSpeed * Time.deltaTime);
 
                 break;             
             }
@@ -269,7 +275,7 @@ namespace Source.Gameplay.Characters
         }
 
 
-        private void OnStickmanDie(Stickman stickman)
+        private void RemoveStickman(Stickman stickman, Action onZeroCount)
         {
             var prev = StickmanCount;
             
@@ -277,12 +283,33 @@ namespace Source.Gameplay.Characters
 
             _characters.Remove(stickman);
 
-            ChangeStickmanCountEvent?.Invoke(prev, StickmanCount);           
+            ChangeStickmanCountEvent?.Invoke(prev, StickmanCount);
 
             if (StickmanCount > 0) return;
 
-            Failure();
+            onZeroCount?.Invoke();
         }
+
+
+        private void OnStickmanDie(Stickman stickman)
+        {
+            RemoveStickman(stickman, Failure); 
+        }
+
+
+        private void OnStickmanFinish(Stickman stickman, int points)
+        {
+            stickman.transform.SetParent(null);
+            RemoveStickman(stickman, () => Completed(points));
+        }
+
+
+        private void Completed(int points)
+        {
+            SetState(State.NONE);
+            CompletedEvent?.Invoke(points);
+        }
+
 
         private void Failure()
         {

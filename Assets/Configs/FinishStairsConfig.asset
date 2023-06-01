@@ -1,0 +1,35 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0eb2c9ba96f1096df8f4676f192fe709, type: 3}
+  m_Name: FinishStairsConfig
+  m_EditorClassIdentifier: 
+  <BlockPrefab>k__BackingField: {fileID: 171106914457671281, guid: b3a618d25b68283a4b97360f94f30e1e,
+    type: 3}
+  <MinBlocksAmount>k__BackingField: 10
+  <PointsStep>k__BackingField: 10
+  <BlockColors>k__BackingField:
+  - <Base>k__BackingField: {r: 0.6996901, g: 0.9528302, b: 0.15730685, a: 1}
+    <Emission>k__BackingField: {r: 0.07350632, g: 0.1792453, b: 0.03466536, a: 1}
+  - <Base>k__BackingField: {r: 0.038848326, g: 0.9150943, b: 0.7275374, a: 1}
+    <Emission>k__BackingField: {r: 0.008410464, g: 0.066037714, b: 0.06201127, a: 1}
+  - <Base>k__BackingField: {r: 0.013883919, g: 0.3919486, b: 0.9811321, a: 1}
+    <Emission>k__BackingField: {r: 0.011836951, g: 0.041472886, b: 0.13207549, a: 1}
+  - <Base>k__BackingField: {r: 0.8605151, g: 0, b: 1, a: 1}
+    <Emission>k__BackingField: {r: 0.11958658, g: 0.029636879, b: 0.16981131, a: 1}
+  - <Base>k__BackingField: {r: 0.990566, g: 0.023362402, b: 0.29905957, a: 1}
+    <Emission>k__BackingField: {r: 0.1792453, g: 0.009300464, b: 0.009300464, a: 1}
+  - <Base>k__BackingField: {r: 1, g: 0.51687396, b: 0, a: 1}
+    <Emission>k__BackingField: {r: 0.084905684, g: 0.037668914, b: 0.003604485, a: 1}
+  - <Base>k__BackingField: {r: 0.9716981, g: 0.78606194, b: 0, a: 1}
+    <Emission>k__BackingField: {r: 0.1792453, g: 0.10651875, b: 0.00591848, a: 1}
+  <Y_Offset>k__BackingField: 1.4
+  <Z_Offset>k__BackingField: 1.4

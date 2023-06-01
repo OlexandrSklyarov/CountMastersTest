@@ -10,7 +10,7 @@ namespace Source.Gameplay.Player.FSM
         IStickmanController StickmanController { get; }
         TouchInputManager Input {get;}
 
-        void Success();
+        void Success(int points);
         void Failure();
     }
 }

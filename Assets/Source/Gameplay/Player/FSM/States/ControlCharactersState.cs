@@ -20,6 +20,7 @@ namespace Source.Gameplay.Player.FSM.States
         {
             _agent.Input.InputTouchEvent += OnInputHandler;
             _agent.StickmanController.FailureEvent += OnFailureHandler;            
+            _agent.StickmanController.CompletedEvent += OnCompletedHandler;            
         }
         
 
@@ -27,6 +28,7 @@ namespace Source.Gameplay.Player.FSM.States
         {
             _agent.Input.InputTouchEvent -= OnInputHandler;
             _agent.StickmanController.FailureEvent -= OnFailureHandler;  
+            _agent.StickmanController.CompletedEvent -= OnCompletedHandler;            
         }
         
 
@@ -103,7 +105,15 @@ namespace Source.Gameplay.Player.FSM.States
 
         private void OnFailureHandler()
         {
-            _context.SwitchState<LevelFailureState>();
-        }     
+            _agent.Failure();
+            _context.SwitchState<GameStopState>();
+        }  
+
+
+        private void OnCompletedHandler(int points)
+        {
+            _agent.Success(points);
+            _context.SwitchState<GameStopState>();
+        }    
     }
 }
