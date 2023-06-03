@@ -1,8 +1,11 @@
+using System;
 using UnityEngine;
 using Cinemachine;
 using Source.Gameplay.Characters.Enemy;
 using Source.Gameplay.UI;
-using DG.Tweening;
+using Source.Services;
+using System.Threading.Tasks;
+
 
 namespace Source.Gameplay
 {
@@ -21,9 +24,7 @@ namespace Source.Gameplay
 
         private void Start()
         {
-            _ui.Init();
-
-            DOTween.SetTweensCapacity(500, 100);
+            _ui.Init();            
 
             _gameProcess = new GameProcess(_playerSpawnPoint, _enemyContainer, _camera);
             _gameProcess.CompletedEvent += OnCompleted;
@@ -48,25 +49,37 @@ namespace Source.Gameplay
         private async void OnCompleted(int point)
         {
             _gameProcess.Stop();  
-            SetRunStatus(GameState.WAIT); 
+            SetRunStatus(GameState.WAIT);              
 
-            Debug.Log("Completed"); 
-
-            await _ui.WinConfirmAsync(); 
-
-            Debug.Log("Next");      
+            WaitConfirmAsync
+            (
+                _ui.WinConfirmAsync(),
+                () => ProjectContext.Instance.SceneController.LoadNextLevel()
+            );             
         }
 
 
         private async void OnFailure()
         {
             _gameProcess.Stop();  
-            SetRunStatus(GameState.WAIT); 
-            Debug.Log("Failure..."); 
+            SetRunStatus(GameState.WAIT);             
 
-            await _ui.LossConfirmAsync(); 
+            WaitConfirmAsync
+            (
+                _ui.LossConfirmAsync(),
+                () => ProjectContext.Instance.SceneController.RestartCurrentLevel()
+            );
+        }
 
-            Debug.Log("RESTART"); 
+
+        private async void WaitConfirmAsync(Task<bool> task, Action onConfirm)
+        {
+            try
+            {
+                var isConfirm = await task;            
+                if (isConfirm) onConfirm?.Invoke();
+            }
+            catch{}
         }
 
 

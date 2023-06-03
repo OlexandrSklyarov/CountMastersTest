@@ -5,8 +5,10 @@ namespace Source.Services
 {
     public class ProjectContext : MonoBehaviour
     {
-        public static ProjectContext Instance => _instance;
         public MainConfig MainConfig => _mainConfig;
+        public SceneController SceneController {get; private set;}
+
+        public static ProjectContext Instance => _instance;
 
         [SerializeField] private MainConfig _mainConfig;
         
@@ -21,7 +23,7 @@ namespace Source.Services
 
         public void Init()
         {
-
+            SceneController = new SceneController(_mainConfig.SceneConfig);
         }        
     }
 }

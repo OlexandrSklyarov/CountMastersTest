@@ -8,7 +8,7 @@ namespace Source.Gameplay.UI
     {
         [SerializeField] private Button _confirmBtn;
         
-        private bool _isConfirm;
+        private TaskCompletionSource<bool> _tcs;
 
 
         public void Init() 
@@ -17,18 +17,16 @@ namespace Source.Gameplay.UI
         }
 
 
-        private void OnConfirm() => _isConfirm = true;
+        private void OnConfirm() => _tcs?.SetResult(true);
 
 
-        private void OnDestroy() 
+        private void OnDestroy() => _tcs?.TrySetCanceled();
+
+
+        public async Task<bool> WaitConfirmAsync()
         {
-            OnConfirm();
-        }
-
-
-        public async Task WaitConfirmAsync()
-        {
-            while(!_isConfirm) await Task.Yield();
+            _tcs = new TaskCompletionSource<bool>();
+            return await _tcs.Task;
         }
     }
 }

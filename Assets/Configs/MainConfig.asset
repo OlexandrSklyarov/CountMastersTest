@@ -55,3 +55,7 @@ MonoBehaviour:
     <Prefab>k__BackingField: {fileID: 8665782160532471987, guid: 91d18f452a0a4133b878579701490120,
       type: 3}
     <PoolSize>k__BackingField: 64
+  <SceneConfig>k__BackingField:
+    <Levels>k__BackingField:
+    - Level1
+    - Level2

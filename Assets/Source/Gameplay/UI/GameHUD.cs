@@ -32,30 +32,37 @@ namespace Source.Gameplay.UI
             Show(_game);
         }
 
+
         public async Task WaitStartGameAsync()
         {
-            await _start.WaitConfirmAsync();
+            try 
+            {
+                var isConfirm = await _start.WaitConfirmAsync();
 
-            Hide(_start);
-            Show(_game);
+                if (!isConfirm) return;
+
+                Hide(_start);
+                Show(_game);
+            }
+            catch{}            
         }
 
 
-        public async Task WinConfirmAsync()
+        public async Task<bool> WinConfirmAsync()
         {
             Hide(_game);
             Show(_win);
 
-            await _win.WaitConfirmAsync();
+            return await _win.WaitConfirmAsync();
         }
 
 
-        public async Task LossConfirmAsync()
+        public async Task<bool> LossConfirmAsync()
         {
             Hide(_game);
             Show(_loss);
             
-            await _loss.WaitConfirmAsync();
+            return await _loss.WaitConfirmAsync();
         }
 
 
