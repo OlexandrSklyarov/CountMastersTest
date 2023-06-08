@@ -23,9 +23,12 @@ namespace Source.Gameplay
 
         private void Start()
         {
-            _ui.Init();            
+            var config = ProjectContext.Instance.MainConfig;
 
-            _gameProcess = new GameProcess(_playerSpawnPoint, _enemyContainer, _camera);
+            _ui.Init();    
+            _camera.Init(config.Camera);        
+
+            _gameProcess = new GameProcess(config, _playerSpawnPoint, _enemyContainer, _camera);
             _gameProcess.CompletedEvent += OnCompleted;
             _gameProcess.FailureEvent += OnFailure;
 

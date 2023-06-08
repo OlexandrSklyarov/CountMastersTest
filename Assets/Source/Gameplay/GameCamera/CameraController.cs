@@ -10,7 +10,7 @@ namespace Source.Gameplay.GameCamera
         [SerializeField] private CinemachineVirtualCamera _resultCamera;
         
 
-        public void Init(CameraData config, Transform target)
+        public void Init(CameraData config)
         {
             SetupCamera(_processCamera, config.GameCameraOffset);
             SetupCamera(_resultCamera, config.ResultCameraOffset);

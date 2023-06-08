@@ -22,13 +22,13 @@ namespace Source.Gameplay
         public event Action FailureEvent;     
 
 
-        public GameProcess(Transform _playerSpawnPoint, Characters.Enemy.EnemyContainer enemyContainer, 
+        public GameProcess(MainConfig config, Transform _playerSpawnPoint, Characters.Enemy.EnemyContainer enemyContainer, 
             ICameraController camera)
         {
-            _camera = camera;
-            _config = ProjectContext.Instance.MainConfig;
+            _config = config;
+            _camera = camera;            
             _enemyContainer = enemyContainer;
-
+            
             _input = new TouchInputManager();
 
             var stickmanFactory = new StickmanFactory(_config.StickmanCollection);
