@@ -59,3 +59,6 @@ MonoBehaviour:
     <Levels>k__BackingField:
     - Level1
     - Level2
+  <Camera>k__BackingField:
+    <GameCameraOffset>k__BackingField: {x: 0, y: 14.5, z: -10}
+    <ResultCameraOffset>k__BackingField: {x: 12.44, y: 14.5, z: -10}

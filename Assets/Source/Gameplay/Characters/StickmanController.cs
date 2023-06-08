@@ -7,6 +7,7 @@ using Source.Gameplay.Environment;
 using Source.Gameplay.Extensions;
 using Source.Services;
 using Source.Data;
+using System.Linq;
 
 namespace Source.Gameplay.Characters
 {
@@ -36,7 +37,7 @@ namespace Source.Gameplay.Characters
         public event Action<int, int> ChangeStickmanCountEvent;
         public event Action FailureEvent;
         public event Action<int> CompletedEvent;
-        public event Action FinishStateEvent;
+        public event Action<Transform> FinishStateEvent;
 
 
         public void Init(StickmanControllerData config, StickmanFactory factory)
@@ -116,7 +117,7 @@ namespace Source.Gameplay.Characters
 
             _counter.Hide();
             SetState(State.FINISH);
-            FinishStateEvent?.Invoke();
+            FinishStateEvent?.Invoke(_characters.Last().transform);
         }  
 
 
@@ -161,7 +162,13 @@ namespace Source.Gameplay.Characters
 
                 case State.FINISH:
 
-                    _tr.Translate(_tr.forward * _config.Movement.VerticalSpeed * Time.deltaTime);
+                    var speed = _config.Movement.VerticalSpeed * Time.deltaTime;
+                    
+                    _tr.Translate(_tr.forward * speed);
+                    
+                    var pos = _tr.position;
+                    pos.x = Mathf.Lerp(pos.x, 0f, speed);
+                    _tr.position = pos;
 
                 break;             
             }
@@ -298,8 +305,8 @@ namespace Source.Gameplay.Characters
 
 
         private void OnStickmanFinish(Stickman stickman, int points)
-        {
-            stickman.transform.SetParent(null);
+        {            
+            stickman.Release();
             RemoveStickman(stickman, () => Completed(points));
         }
 

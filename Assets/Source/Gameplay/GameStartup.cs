@@ -1,11 +1,10 @@
 using System;
 using UnityEngine;
-using Cinemachine;
 using Source.Gameplay.Characters.Enemy;
 using Source.Gameplay.UI;
 using Source.Services;
 using System.Threading.Tasks;
-
+using Source.Gameplay.GameCamera;
 
 namespace Source.Gameplay
 {
@@ -14,7 +13,7 @@ namespace Source.Gameplay
         private enum GameState {WAIT, RUN}
 
         [SerializeField] private Transform _playerSpawnPoint;
-        [SerializeField] private CinemachineVirtualCamera _camera;
+        [SerializeField] private CameraController _camera;
         [SerializeField] private EnemyContainer _enemyContainer;
         [SerializeField] private GameHUD _ui;
 
@@ -46,7 +45,7 @@ namespace Source.Gameplay
         }
 
 
-        private async void OnCompleted(int point)
+        private void OnCompleted(int point)
         {
             _gameProcess.Stop();  
             SetRunStatus(GameState.WAIT);              
@@ -59,7 +58,7 @@ namespace Source.Gameplay
         }
 
 
-        private async void OnFailure()
+        private void OnFailure()
         {
             _gameProcess.Stop();  
             SetRunStatus(GameState.WAIT);             

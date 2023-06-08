@@ -1,9 +1,9 @@
 using System;
-using Cinemachine;
 using Common.Input;
 using Source.Data;
 using Source.Gameplay.Characters;
 using Source.Gameplay.Characters.Enemy;
+using Source.Gameplay.GameCamera;
 using Source.Gameplay.Player;
 using Source.Services;
 using UnityEngine;
@@ -16,14 +16,14 @@ namespace Source.Gameplay
         private readonly EnemyContainer _enemyContainer;
         private readonly TouchInputManager _input;
         private readonly PlayerController _playerController;
-        private readonly CinemachineVirtualCamera _camera;
+        private readonly ICameraController _camera;
 
         public event Action<int> CompletedEvent;            
         public event Action FailureEvent;     
 
 
         public GameProcess(Transform _playerSpawnPoint, Characters.Enemy.EnemyContainer enemyContainer, 
-            CinemachineVirtualCamera camera)
+            ICameraController camera)
         {
             _camera = camera;
             _config = ProjectContext.Instance.MainConfig;
@@ -42,14 +42,9 @@ namespace Source.Gameplay
             _playerController.SuccessEvent += OnCompleted;
             _playerController.FailureEvent += OnFailure;
 
-            CameraSetTarget(stickmanController.transform); 
-        }
-        
-
-        private void CameraSetTarget(Transform target)
-        {
-            _camera.Follow = target;
-        }
+            _camera.SetState(CameraState.GAME);
+            _camera.SetTarget(stickmanController.transform); 
+        }       
 
 
         private StickmanController GetStickmanController(Transform spawnPoint, StickmanFactory factory)
@@ -87,13 +82,17 @@ namespace Source.Gameplay
 
         private void OnFailure()
         {
+            _camera.SetState(CameraState.RESULT); 
+
             UnScribePlayerController();
             FailureEvent?.Invoke();
         }
         
 
-        private void OnFinish()
+        private void OnFinish(Transform target)
         {
+            _camera.SetTarget(target); 
+            _camera.SetState(CameraState.RESULT); 
             Debug.Log("Change camera offset");
         }
 

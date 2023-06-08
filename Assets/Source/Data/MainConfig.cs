@@ -12,5 +12,6 @@ namespace Source.Data
         [field: Space(20f), SerializeField] public EnemyData EnemyConfig {get; private set;}
         [field: Space(20f), SerializeField] public StickmanData[] StickmanCollection{get; private set;}
         [field: Space(20f), SerializeField] public SceneData SceneConfig {get; private set;}
+        [field: Space(20f), SerializeField] public CameraData Camera {get; private set;}
     }
 }

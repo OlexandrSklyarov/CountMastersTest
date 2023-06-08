@@ -112,6 +112,13 @@ namespace Source.Gameplay.Characters
         }
 
 
+        public void Release()
+        {
+            _tr.SetParent(null);
+            PlayStop();
+        }
+
+
         public void SetLocalPositionAndRotation(Vector3 pos, Vector3 rot, float duration)
         {
             StopSequence();
