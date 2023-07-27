@@ -50,7 +50,7 @@ MonoBehaviour:
   - <Type>k__BackingField: 0
     <Prefab>k__BackingField: {fileID: 8665782160532471987, guid: 748b6084bd9c76b9a936458fab419147,
       type: 3}
-    <PoolSize>k__BackingField: 128
+    <PoolSize>k__BackingField: 256
   - <Type>k__BackingField: 1
     <Prefab>k__BackingField: {fileID: 8665782160532471987, guid: 91d18f452a0a4133b878579701490120,
       type: 3}

@@ -8,6 +8,7 @@ using Source.Gameplay.Extensions;
 using Source.Services;
 using Source.Data;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace Source.Gameplay.Characters
 {
@@ -52,7 +53,7 @@ namespace Source.Gameplay.Characters
             _container.SetLocalPositionAndRotation(_tr.position, _tr.rotation);
             _container.SetParent(_tr);
 
-            Populate(_config.StartStickmanCount);
+            PopulateAsync(_config.StartStickmanCount);
 
             SetState(State.NORMAL);
         }
@@ -64,7 +65,7 @@ namespace Source.Gameplay.Characters
         }
 
 
-        private void Populate(int num)
+        private async void PopulateAsync(int num)
         {
             var prev = StickmanCount;
 
@@ -79,6 +80,8 @@ namespace Source.Gameplay.Characters
                 stickman.FinishEvent += OnStickmanFinish;
 
                 _characters.Add(stickman);
+
+                if (i % 20 == 0) await Task.Yield();
             }
 
             Formation(2f);
@@ -225,6 +228,8 @@ namespace Source.Gameplay.Characters
 
         void IStickmanController.Stop()
         {
+            if (_state != State.NORMAL) return;
+            
             _characters.ForEach(s => s.PlayStop()); 
         }
 
@@ -254,13 +259,13 @@ namespace Source.Gameplay.Characters
 
         void IInteractTarget.MultiplyStickman(int multiplier)
         {
-            Populate(StickmanCount * multiplier);
+            PopulateAsync(StickmanCount * multiplier);
         }
 
 
         void IInteractTarget.AddStickman(int amount)
         {
-            Populate(amount);
+            PopulateAsync(amount);
         }
         
 
